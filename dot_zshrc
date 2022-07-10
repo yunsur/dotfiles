@@ -1,0 +1,113 @@
+
+# Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
+# Initialization code that may require console input (password prompts, [y/n]
+# confirmations, etc.) must go above this block; everything else may go below.
+if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
+  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
+fi
+
+if [[ ! -f ~/.zinit/bin/zinit.zsh ]]; then
+    mkdir ~/.zinit
+    git clone https://github.com/zdharma-continuum/zinit.git ~/.zinit/bin
+fi
+
+# load zinit
+source ~/.zinit/bin/zinit.zsh
+
+# 快速目录跳转
+zinit ice lucid wait='1'
+# Turbo mode with "wait"
+zinit light-mode lucid wait for \
+  is-snippet OMZ::lib/history.zsh \
+  MichaelAquilina/zsh-you-should-use \
+  zdharma-continuum/history-search-multi-word \
+
+# binary release, unpack provide fzf
+zinit ice from"gh-r" as"program"
+zinit light junegunn/fzf
+zinit light Aloxaf/fzf-tab
+
+# zinit ice from"gh-r" as"program" mv"docker* -> docker-compose" bpick"*linux*"
+# zinit load docker/compose
+zinit ice as"program" from"gh-r" mv"docker-c* -> docker-compose"
+zinit light "docker/compose"
+
+zinit load agkozak/zsh-z
+
+# 语法高亮
+zinit ice lucid wait='0' atinit='zpcompinit'
+zinit light zdharma-continuum/fast-syntax-highlighting
+
+# 自动建议
+zinit ice lucid wait="0" atload='_zsh_autosuggest_start'
+zinit light zsh-users/zsh-autosuggestions
+
+# 补全
+zinit ice lucid wait='0'
+zinit light zsh-users/zsh-completions
+
+# 加载 OMZ 框架及部分插件
+zinit snippet OMZ::lib/completion.zsh
+zinit snippet OMZ::lib/history.zsh
+zinit snippet OMZ::lib/key-bindings.zsh
+zinit snippet OMZ::lib/theme-and-appearance.zsh
+zinit snippet OMZ::plugins/autojump
+zinit snippet OMZ::plugins/colored-man-pages/colored-man-pages.plugin.zsh
+zinit snippet OMZ::plugins/sudo/sudo.plugin.zsh
+zinit snippet OMZ::plugins/tmux/tmux.plugin.zsh
+zinit snippet OMZ::plugins/tmuxinator/tmuxinator.plugin.zsh
+zinit snippet OMZ::plugins/command-not-found/command-not-found.plugin.zsh
+zinit snippet OMZ::plugins/pip/pip.plugin.zsh
+zinit ice lucid wait='1'
+zinit snippet OMZ::plugins/git/git.plugin.zsh
+zinit snippet OMZ::plugins/ssh-agent
+
+# Gitignore plugin – commands gii and gi
+zinit ice wait"2" lucid
+zinit load voronkovich/gitignore.plugin.zsh
+
+zinit load djui/alias-tips
+
+# zinit light denysdovhan/spaceship-prompt
+zinit ice depth=1
+zinit light romkatv/powerlevel10k
+
+zinit ice as"program" from"gh-r" mv"exa* -> exa" pick"exa/exa"
+zinit light ogham/exa
+zinit light DarrinTisdale/zsh-aliases-exa
+
+# Compinit : After zinits, before cdreplay
+# https://carlosbecker.com/posts/speeding-up-zsh/
+if type brew &>/dev/null; then
+  FPATH=$(brew --prefix)/share/zsh/site-functions:$FPATH
+
+  autoload -Uz compinit
+  compinit
+fi
+
+ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=6'
+
+source $HOME/.dotfiles/zsh.d/common.zsh
+source $HOME/.dotfiles/zsh.d/keybindings.zsh
+source $HOME/.dotfiles/zsh.d/alias.zsh
+source $HOME/.dotfiles/zsh.d/env.zsh
+source $HOME/.dotfiles/zsh.d/fzf.zsh
+
+if [[ -f ~/.zshrc.local ]]; then
+    source $HOME/.zshrc.local
+fi
+
+ZSH_DISABLE_COMPFIX=true
+
+# fpath=(~/.zsh/completions $fpath)
+
+# space
+SPACESHIP_DIR_SHOW="${SPACESHIP_DIR_SHOW=true}"
+SPACESHIP_DIR_PREFIX="${SPACESHIP_DIR_PREFIX="in "}"
+SPACESHIP_DIR_SUFFIX="${SPACESHIP_DIR_SUFFIX="$SPACESHIP_PROMPT_DEFAULT_SUFFIX"}"
+SPACESHIP_DIR_TRUNC="0"
+SPACESHIP_DIR_TRUNC_REPO="${SPACESHIP_DIR_TRUNC_REPO=true}"
+SPACESHIP_DIR_COLOR="${SPACESHIP_DIR_COLOR="cyan"}"
+
+# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
+[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
