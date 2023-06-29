@@ -9,6 +9,9 @@ export LC_CTYPE=en_US.UTF-8
 # GPG
 export GPG_TTY=$(tty)
 
+# thefuck
+eval $(thefuck --alias)
+
 # arch
 export ARCHFLAGS="-arch x86_64"
 
@@ -16,55 +19,28 @@ export ARCHFLAGS="-arch x86_64"
 export DOCKER_BUILDKIT=0
 export COMPOSE_DOCKER_CLI_BUILD=0
 
+# goenv
+if [[ -d $HOME/.goenv ]]; then
+    export GOENV_ROOT="$HOME/.goenv"
+    export PATH="$GOENV_ROOT/bin:$PATH"
+    eval "$(goenv init -)"
+fi
+
+# go
+if [[ -d $HOME/go ]]; then
+    export GO111MODULE=on
+    export GOPROXY=https://goproxy.cn,direct
+    export GOBIN="$GOROOT/bin"
+    export PATH="$GOROOT/bin:$PATH"
+    export PATH="$PATH:$GOPATH/bin"
+fi
+
 # pyenv
 if [[ -d $HOME/.pyenv ]]; then
     export PYENV_ROOT="$HOME/.pyenv"
     export PATH="$PYENV_ROOT/bin:$PATH"
-    if command -v pyenv 1>/dev/null 2>&1; then
-        eval "$(pyenv init --path)"
-    fi
-fi
-
-# virtualenvwrapper
-if [[ -d $HOME/.virtualenvs ]]; then
-    export WORKON_HOME=$HOME/.virtualenvs
-    export PROJECT_HOME=$HOME/Sources
-    # source $HOME/.pyenv/versions/2.7.18/bin/virtualenvwrapper.sh
-    # source $HOME/.virtualenvs/3.10.2/bin/virtualenvwrapper.sh
-fi
-
-# rbenv
-if [[ -d ~/.rbenv/ ]]; then
-    export PATH="$HOME/.rbenv/bin:$PATH"
-    eval "$(rbenv init -)"
-    export PATH="$HOME/.rbenv/plugins/ruby-build/bin:$PATH"
-fi
-
-# nvm
-if [[ -d $HOME/.nvm ]]; then
-    export NVM_DIR="$HOME/.nvm"
-    [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" # This loads nvm
-    [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion" # This loads nvm bash_completion
-fi
-
-# cargo
-if [[ -d $HOME/.cargo ]]; then
-	export PATH="$PATH:$HOME/.cargo/bin"
-fi
-
-# go
-if [[ -d /usr/local/go ]]; then
-    export PATH="$PATH:/usr/local/go/bin"
-    export GOROOT="/usr/local/go"
-fi
-
-# goenv
-if [[ -d $HOME/go ]]; then
-    export GO111MODULE=on
-    export GOPROXY=https://goproxy.cn,direct
-    export GOPATH="$HOME/go"
-    export GOBIN="$GOPATH/bin"
-    export PATH=$PATH:$GOBIN
+    eval "$(pyenv init -)"
+    eval "$(pyenv virtualenv-init -)"
 fi
 
 # java
@@ -72,6 +48,18 @@ if [[ -d /Library/Java/JavaVirtualMachines/temurin-11.jdk ]]; then
     export JAVA_HOME=/Library/Java/JavaVirtualMachines/temurin-11.jdk/Contents/Home
     export JRE_HOME=/Library/Java/JavaVirtualMachines/temurin-11.jdk/Contents/Home/jre
 fi
+
+# rbenv
+if [[ -d ~/.rbenv/ ]]; then
+    export RBENV_ROOT="$HOME/.rbenv"
+    export PATH="$RBENV_ROOT/bin:$PATH"
+    eval "$(rbenv init -)"
+fi
+
+# llvm
+export PATH="/usr/local/opt/llvm/bin:$PATH"
+export LDFLAGS="-L/usr/local/opt/llvm/lib"
+export CPPFLAGS="-I/usr/local/opt/llvm/include"
 
 # m4
 export PATH="/usr/local/opt/m4/bin:$PATH"
