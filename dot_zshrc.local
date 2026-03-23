@@ -28,3 +28,6 @@ eval "$(/opt/homebrew/bin/fzf --zsh)"
 
 # Override prompt (zshrc.local loads after prompt.zsh)
 PS1='%n@%m %1~> '
+export PYENV_ROOT="$HOME/.pyenv"
+[[ -d $PYENV_ROOT/bin ]] && export PATH="$PYENV_ROOT/bin:$PATH"
+eval "$(pyenv init - zsh)"
