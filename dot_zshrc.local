@@ -1,0 +1,30 @@
+export NVM_DIR="$HOME/.nvm"
+  [ -s "/opt/homebrew/opt/nvm/nvm.sh" ] && \. "/opt/homebrew/opt/nvm/nvm.sh"  # This loads nvm
+  [ -s "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm" ] && \. "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm"  # This loads nvm bash_completion
+
+# ============================================================
+# Zinit
+# ============================================================
+ZINIT_HOME="${XDG_DATA_HOME:-${HOME}/.local/share}/zinit/zinit.git"
+[ ! -d "$ZINIT_HOME" ] && mkdir -p "$(dirname $ZINIT_HOME)" && git clone https://github.com/zdharma-continuum/zinit.git "$ZINIT_HOME"
+source "${ZINIT_HOME}/zinit.zsh"
+
+# ============================================================
+# 插件
+# ============================================================
+zinit light Aloxaf/fzf-tab
+
+zinit ice wait lucid atload'_zsh_autosuggest_start'
+zinit light zsh-users/zsh-autosuggestions
+
+zinit ice wait lucid
+zinit light zdharma-continuum/fast-syntax-highlighting
+
+# ============================================================
+# 工具集成
+# ============================================================
+eval "$(/opt/homebrew/bin/zoxide init zsh)"
+eval "$(/opt/homebrew/bin/fzf --zsh)"
+
+# Override prompt (zshrc.local loads after prompt.zsh)
+PS1='%n@%m %1~> '
